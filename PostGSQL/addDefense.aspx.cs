@@ -14,8 +14,8 @@ namespace PostGSQL
     public partial class addDefense : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
-        { 
-           // dateDefense.Text = DateTime.Now.ToString("dd/MM/yyyy");
+        {
+            // dateDefense.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
 
         }
@@ -31,21 +31,31 @@ namespace PostGSQL
             checkThesis.Parameters.Add(new SqlParameter("@thesisNumber", SqlDbType.Int)).Value = ThesisSSN.Text;
             SqlParameter sucess = checkThesis.Parameters.Add("@successBit", SqlDbType.Bit);
             sucess.Direction = System.Data.ParameterDirection.Output;
+
+
+            SqlCommand GucianOrNon = new SqlCommand("checkThesisV5", conn);
+            GucianOrNon.CommandType = CommandType.StoredProcedure;
+            GucianOrNon.Parameters.Add(new SqlParameter("@serialNo", SqlDbType.Int)).Value = ThesisSSN.Text;
+            SqlParameter valid = GucianOrNon.Parameters.Add("@isValid", SqlDbType.Bit);
+            valid.Direction = System.Data.ParameterDirection.Output;
             conn.Open();
             checkThesis.ExecuteNonQuery();
+            GucianOrNon.ExecuteNonQuery();
             conn.Close();
-            Response.Write(sucess.Value.ToString());
-            
+
+
 
             if (sucess.Value.ToString() == "True")
             {
                 Response.Write("<script>alert('Defense was already added for this thesis');</script>");
 
             }
-            else {
+            else
+            {
 
-                if (RadioButtonList1.SelectedValue == "1")
+                if (valid.Value.ToString() == "True")
                 {
+
                     SqlCommand AddDefenseGucian = new SqlCommand("AddDefenseGucian", conn);
                     AddDefenseGucian.CommandType = CommandType.StoredProcedure;
                     AddDefenseGucian.Parameters.Add(new SqlParameter("@ThesisSerialNo", SqlDbType.Int)).Value = ThesisSSN.Text;
@@ -62,7 +72,7 @@ namespace PostGSQL
                     {
                         if (sqlEx.Message.StartsWith("The INSERT statement conflicted with the FOREIGN KEY"))
                         {
-                            Response.Write("<script>alert('Invalid Thesis ID For Guican Students');</script>");
+                            Response.Write("<script>alert('Invalid Thesis ID ');</script>");
 
                         }
                         else
@@ -102,7 +112,10 @@ namespace PostGSQL
 
                 }
                 else
+
+
                 {
+
                     SqlCommand AddDefenseNonGucian = new SqlCommand("AddDefenseNonGucian", conn);
                     AddDefenseNonGucian.CommandType = CommandType.StoredProcedure;
                     AddDefenseNonGucian.Parameters.Add(new SqlParameter("@ThesisSerialNo", SqlDbType.Int)).Value = ThesisSSN.Text;
@@ -115,11 +128,14 @@ namespace PostGSQL
                         Response.Write("NonGucian defense added");
 
                     }
+
+
+
                     catch (SqlException sqlEx)
                     {
                         if (sqlEx.Message.StartsWith("The INSERT statement conflicted with the FOREIGN KEY"))
                         {
-                            Response.Write("<script>alert('Invalid Thesis ID for NonGucianStudents');</script>");
+                            Response.Write("<script>alert('Invalid Thesis ID ');</script>");
 
                         }
                         else
@@ -128,6 +144,14 @@ namespace PostGSQL
                             {
                                 Response.Write("<script>alert('Defense with the samte date was already added to this thesis');</script>");
 
+                            }
+                            else
+                            {
+                                if (sqlEx.Message.StartsWith("Student course grade should be higher than 50 to add a defense"))
+                                {
+                                    Response.Write("<script>alert('Student course grade should be higher than 50 to add a defense ');</script>");
+
+                                }
                             }
 
                         }
@@ -142,10 +166,12 @@ namespace PostGSQL
                         }
                     }
                     conn.Close();
-
-
-
                 }
+
+
+
+
+
             }
 
 

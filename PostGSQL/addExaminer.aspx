@@ -15,7 +15,7 @@
         </p>
         <p>
             Thesis Serial Number:
-            <asp:TextBox ID="ThesisSerialNo" runat="server" required ="true"></asp:TextBox>
+            <asp:TextBox ID="ThesisSerialNo" runat="server" required ="true" type ="number"></asp:TextBox>
         </p>
         <p>
       

@@ -10,19 +10,9 @@
     <form id="form1" runat="server">
        <h1>Add Defense</h1>
 
-        
-        <p>
-            GUCian:</p>
-        <p>
-            <asp:RadioButtonList ID="RadioButtonList1" runat="server" required ="true">
-                <asp:ListItem Value ="1" Selected ="True">Yes</asp:ListItem>
-                <asp:ListItem Value ="0">No</asp:ListItem>
-            </asp:RadioButtonList>
-        </p>
-
         <p>
             Thesis Serial Number:
-            <asp:TextBox ID="ThesisSSN" runat="server" required ="true"></asp:TextBox>
+            <asp:TextBox ID="ThesisSSN" runat="server" required ="true" type ="number"></asp:TextBox>
         </p>
         <p>
             Date:

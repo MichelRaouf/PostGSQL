@@ -12,7 +12,7 @@
         </div>
         <p>
             Thesis Serial Number:
-            <asp:TextBox ID="ThesisSN" runat="server" required ="true"></asp:TextBox>
+            <asp:TextBox ID="ThesisSN" runat="server" required ="true" type ="number"></asp:TextBox>
         </p>
         <asp:Button ID="Cancel" runat="server" Text="Cancel" OnClick="cancelThesis_Click" />
     </form>
